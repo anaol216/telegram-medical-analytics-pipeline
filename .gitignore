@@ -28,6 +28,7 @@ profiles.yml  # only if you store profiles inside repo (not recommended)
 data/raw/
 data/interim/
 data/processed/
+data/
 
 # Logs
 *.log
