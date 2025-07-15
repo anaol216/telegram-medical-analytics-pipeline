@@ -1,0 +1,22 @@
+# Core Packages
+telethon
+pandas
+sqlalchemy
+psycopg2-binary
+
+# Data Transformation
+dbt-postgres
+
+# Object Detection
+ultralytics
+
+# Web Framework
+fastapi
+uvicorn
+
+# Orchestration
+dagster
+dagster-webserver
+
+# Environment Management
+python-dotenv

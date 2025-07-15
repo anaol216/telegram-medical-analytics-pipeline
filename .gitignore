@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.env
+.env.*  # in case you use multiple environment files
+*.sqlite3
+*.db
+venv/
+
+
+# Docker
+*.tar
+*.pid
+
+# dbt
+dbt_packages/
+dbt_modules/
+target/
+manifest.json
+run_results.json
+profiles.yml  # only if you store profiles inside repo (not recommended)
+
+# Data files
+data/raw/
+data/interim/
+data/processed/
+
+# Logs
+*.log
+
+# IDEs / OS
+.idea/
+*.DS_Store
+Thumbs.db
+
+# Dependency files (optional)
+poetry.lock
+Pipfile.lock
+
+# Test coverage reports
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+
+# Secrets (Important!)
+secrets.yaml
+secrets.json
+private.key
+public.key
+
+# Notebooks (optional)
+*.ipynb_checkpoints/
