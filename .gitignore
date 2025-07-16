@@ -56,3 +56,7 @@ public.key
 
 # Notebooks (optional)
 *.ipynb_checkpoints/
+
+# Ignore Telethon session files
+*.session
+*.session-journal
