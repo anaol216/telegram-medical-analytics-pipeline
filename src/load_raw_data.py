@@ -2,12 +2,10 @@ import psycopg2
 import json
 import os
 
-# Adjust the path to your actual raw data folder
 RAW_DATA_DIR = './data/raw'
 
-# Connect to PostgreSQL running inside Docker, but exposed to localhost
 conn = psycopg2.connect(
-    host="localhost",     # <-- Important: localhost when running outside Docker
+    host="localhost",
     port="5432",
     database="telegramdb",
     user="postgres",
@@ -16,24 +14,29 @@ conn = psycopg2.connect(
 
 cursor = conn.cursor()
 
-# Loop through your JSON files
-for filename in os.listdir(RAW_DATA_DIR):
-    if filename.endswith('.json'):
-        filepath = os.path.join(RAW_DATA_DIR, filename)
-        with open(filepath, 'r', encoding='utf-8') as f:
-            messages = json.load(f)
-            for message in messages:
-                cursor.execute("""
-                    INSERT INTO raw_telegram_messages (message_id, date, channel_name, message_text, media_exists)
-                    VALUES (%s, %s, %s, %s, %s)
-                    ON CONFLICT (message_id) DO NOTHING;
-                """, (
-                    message.get('message_id'),
-                    message.get('date'),
-                    message.get('channel_name'),
-                    message.get('message_text'),
-                    message.get('media_exists')
-                ))
+for root, dirs, files in os.walk(RAW_DATA_DIR):
+    for filename in files:
+        if filename.endswith('.json'):
+            filepath = os.path.join(root, filename)
+            print(f"Loading data from: {filepath}")
+            with open(filepath, 'r', encoding='utf-8') as f:
+                messages = json.load(f)
+                for message in messages:
+                    try:
+                        print(f"Inserting message_id: {message.get('message_id')}")
+                        cursor.execute("""
+                            INSERT INTO raw_telegram_messages (message_id, date, channel_name, message_text, media_exists)
+                            VALUES (%s, %s, %s, %s, %s)
+                            ON CONFLICT (message_id) DO NOTHING;
+                        """, (
+                            message.get('message_id'),
+                            message.get('date'),
+                            message.get('channel_name'),
+                            message.get('message_text'),
+                            message.get('media_exists')
+                        ))
+                    except Exception as e:
+                        print(f"Error inserting message {message.get('message_id')}: {e}")
 
 conn.commit()
 cursor.close()
