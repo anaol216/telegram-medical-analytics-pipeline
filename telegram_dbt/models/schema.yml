@@ -5,7 +5,8 @@ sources:
     tables:
       - name: raw_telegram_messages # your raw table
         description: "Raw Telegram messages loaded from JSON files."
-
+      - name: raw_image_detections # your raw table for image detections
+        description: "Raw image detections loaded from YOLOv8 model outputs."
 models:
   - name: dim_channels
     description: "Dimension table containing Telegram channel information."
@@ -55,5 +56,17 @@ models:
           - not_null
       - name: media_exists
         description: "Indicates if the message contains media."
+        tests:
+          - not_null
+  - name: fct_image_detections
+    description: "Fact table for image detections using YOLOv8."
+    columns:
+      - name: message_id
+        tests:
+          - not_null
+      - name: detected_object_class
+        tests:
+          - not_null
+      - name: confidence_score
         tests:
           - not_null
