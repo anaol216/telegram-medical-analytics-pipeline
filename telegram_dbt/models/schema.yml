@@ -1,0 +1,72 @@
+version: 2
+
+sources:
+  - name: public # schema name where your raw tables live
+    tables:
+      - name: raw_telegram_messages # your raw table
+        description: "Raw Telegram messages loaded from JSON files."
+      - name: raw_image_detections # your raw table for image detections
+        description: "Raw image detections loaded from YOLOv8 model outputs."
+models:
+  - name: dim_channels
+    description: "Dimension table containing Telegram channel information."
+    columns:
+      - name: channel_name
+        description: "Name of the Telegram channel."
+        tests:
+          - not_null
+
+  - name: dim_dates
+    description: "Date dimension table for time-based analysis."
+    columns:
+      - name: date_day
+        description: "Date representing the day."
+        tests:
+          - unique
+          - not_null
+
+      - name: year
+        description: "Year extracted from the date."
+
+      - name: month
+        description: "Month extracted from the date."
+
+      - name: day
+        description: "Day of the month."
+
+  - name: fct_messages
+    description: "Fact table containing Telegram messages."
+    columns:
+      - name: message_id
+        description: "Primary key for messages."
+        tests:
+          - unique
+          - not_null
+      - name: channel_name
+        description: "Foreign key to dim_channels."
+        tests:
+          - not_null
+      - name: message_length
+        description: "Length of the Telegram message."
+        tests:
+          - not_null
+      - name: message_date
+        description: "Foreign key to dim_dates."
+        tests:
+          - not_null
+      - name: media_exists
+        description: "Indicates if the message contains media."
+        tests:
+          - not_null
+  - name: fct_image_detections
+    description: "Fact table for image detections using YOLOv8."
+    columns:
+      - name: message_id
+        tests:
+          - not_null
+      - name: detected_object_class
+        tests:
+          - not_null
+      - name: confidence_score
+        tests:
+          - not_null
