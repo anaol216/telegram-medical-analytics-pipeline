@@ -25,15 +25,16 @@ for root, dirs, files in os.walk(RAW_DATA_DIR):
                     try:
                         print(f"Inserting message_id: {message.get('message_id')}")
                         cursor.execute("""
-                            INSERT INTO raw_telegram_messages (message_id, date, channel_name, message_text, media_exists)
-                            VALUES (%s, %s, %s, %s, %s)
+                            INSERT INTO raw_telegram_messages (message_id, date, channel_name, message_text, media_exists,media_file_path)
+                            VALUES (%s, %s, %s, %s, %s, %s)
                             ON CONFLICT (message_id) DO NOTHING;
                         """, (
                             message.get('message_id'),
                             message.get('date'),
                             message.get('channel_name'),
                             message.get('message_text'),
-                            message.get('media_exists')
+                            message.get('media_exists'),
+                            message.get('media_file_path')  # Assuming media_exists is a boolean
                         ))
                     except Exception as e:
                         print(f"Error inserting message {message.get('message_id')}: {e}")
