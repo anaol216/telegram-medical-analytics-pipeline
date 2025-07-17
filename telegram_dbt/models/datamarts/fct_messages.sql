@@ -5,7 +5,7 @@ with messages as (
 select
     message_id,
     channel_name,
-    date,
+    message_date,
     length(message_text) as message_length,
     media_exists
 from messages
